@@ -1470,5 +1470,28 @@
     "move_cost": 3,
     "flags": [ "TRANSPARENT", "DIGGABLE", "MOUNTABLE", "NOCOLLIDE", "CONTAINER", "SEALED" ],
     "bash": { "sound": "thump", "ter_set": "t_dirt", "str_min": 50, "str_max": 100, "str_min_supported": 100 }
+  },
+  {
+    "type": "terrain",
+    "id": "t_metal_floor_turret",
+    "name": "retracted floor turret",
+    "looks_like": "t_metal_floor",
+    "description": "A turret, retracted into the floor.",
+    "symbol": ".",
+    "color": "cyan",
+    "move_cost": 2,
+    "flags": [ "TRANSPARENT", "INDOORS", "MINEABLE", "FLAT", "NOCOLLIDE", "CONTAINER", "SEALED" ],
+    "bash": {
+      "sound": "thump",
+      "ter_set": "t_pit",
+      "str_min": 100,
+      "str_max": 300,
+      "str_min_supported": 100,
+      "items": [
+        { "item": "steel_lump", "count": [ 1, 4 ] },
+        { "item": "steel_chunk", "count": [ 3, 12 ] },
+        { "item": "scrap", "count": [ 9, 36 ] }
+      ]
+    }
   }
 ]
