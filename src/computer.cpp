@@ -373,13 +373,26 @@ static item *pick_usb()
     return nullptr;
 }
 
-static void update_submap_turrets()
+static void retract_submap_turrets()
 {
     for( monster &critter : g->all_monsters() ) {
         // Check 1) same overmap coords, 2+3) robot+immobile=turret, 4) hostile
         if( ms_to_omt_copy( g->m.getabs( critter.pos() ) ) == ms_to_omt_copy( g->m.getabs( g->u.pos() ) ) &&
             critter.type->in_species( ROBOT ) && critter.has_flag( MF_IMMOBILE ) && critter.friendly == 0 ) {
-            critter.friendly = -1;
+            const auto mon_item_id = critter.type->revert_to_itype;
+            const tripoint p = critter.pos();
+            if( !mon_item_id.empty() ) {
+                g->m.ter_set( p, t_metal_floor_turret );
+                g->m.add_item_or_charges( p, critter.to_item() );
+                if( !critter.has_flag( MF_INTERIOR_AMMO ) ) {
+                    for( auto &ammodef : critter.ammo ) {
+                        if( ammodef.second > 0 ) {
+                            g->m.spawn_item( p.xy(), ammodef.first, 1, ammodef.second, calendar::turn );
+                        }
+                    }
+                }
+                g->remove_zombie( critter );
+            }
         }
     }
 }
@@ -398,7 +411,7 @@ void computer::activate_function( computer_action action )
 
         // OPEN_DISARM falls through to just OPEN
         case COMPACT_OPEN_DISARM:
-            update_submap_turrets();
+            retract_submap_turrets();
         /* fallthrough */
         case COMPACT_OPEN:
             g->m.translate_radius( t_door_metal_locked, t_floor, 25.0, g->u.pos(), true );
@@ -417,7 +430,7 @@ void computer::activate_function( computer_action action )
 
         // UNLOCK_DISARM falls through to just UNLOCK
         case COMPACT_UNLOCK_DISARM:
-            update_submap_turrets();
+            retract_submap_turrets();
         /* fallthrough */
         case COMPACT_UNLOCK:
             g->m.translate_radius( t_door_metal_locked, t_door_metal_c, 8.0, g->u.pos(), true );
@@ -475,7 +488,7 @@ void computer::activate_function( computer_action action )
 
         // COMPACT_RELEASE_DISARM falls through to just COMPACT_RELEASE_BIONICS
         case COMPACT_RELEASE_DISARM:
-            update_submap_turrets();
+            retract_submap_turrets();
         /* fallthrough */
         case COMPACT_RELEASE_BIONICS:
             sounds::sound( g->u.pos(), 40, sounds::sound_t::alarm, _( "an alarm sound!" ), false, "environment",
