@@ -805,7 +805,7 @@ void iexamine::controls_gate( player &p, const tripoint &examp )
 }
 
 /**
- * Use id/hack reader. Using an id friendlies turrets.
+ * Use id/hack reader. Using an id retracts turrets.
  */
 void iexamine::cardreader( player &p, const tripoint &examp )
 {
