@@ -824,7 +824,20 @@ void iexamine::cardreader( player &p, const tripoint &examp )
             // Check 1) same overmap coords, 2+3) immobile + robot = turret, 4) hostile
             if( ms_to_omt_copy( g->m.getabs( critter.pos() ) ) == ms_to_omt_copy( g->m.getabs( examp ) ) &&
                 critter.type->in_species( ROBOT ) && critter.has_flag( MF_IMMOBILE ) && critter.friendly == 0 ) {
-                critter.friendly = -1;
+                const auto mon_item_id = critter.type->revert_to_itype;
+                const tripoint p = critter.pos();
+                if( !mon_item_id.empty() ) {
+                    g->m.ter_set( p, t_metal_floor_turret );
+                    g->m.add_item_or_charges( p, critter.to_item() );
+                    if( !critter.has_flag( MF_INTERIOR_AMMO ) ) {
+                        for( auto &ammodef : critter.ammo ) {
+                            if( ammodef.second > 0 ) {
+                                g->m.spawn_item( p.xy(), ammodef.first, 1, ammodef.second, calendar::turn );
+                            }
+                        }
+                    }
+                    g->remove_zombie( critter );
+                }
             }
         }
         if( open ) {
