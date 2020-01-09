@@ -482,7 +482,7 @@ ter_id t_null,
        t_pit_corpsed, t_pit_covered, t_pit_spiked, t_pit_spiked_covered, t_pit_glass, t_pit_glass_covered,
        t_rock_floor,
        t_grass, t_grass_long, t_grass_tall, t_grass_golf, t_grass_dead, t_grass_white, t_moss,
-       t_metal_floor,
+       t_metal_floor, t_metal_floor_turret,
        t_pavement, t_pavement_y, t_sidewalk, t_concrete,
        t_thconc_floor, t_thconc_floor_olight, t_strconc_floor,
        t_floor, t_floor_waxed,
@@ -618,6 +618,7 @@ void set_ter_ids()
     t_grass_tall = ter_id( "t_grass_tall" );
     t_moss = ter_id( "t_moss" );
     t_metal_floor = ter_id( "t_metal_floor" );
+    t_metal_floor_turret = ter_id( "t_metal_floor_turret" );
     t_pavement = ter_id( "t_pavement" );
     t_pavement_y = ter_id( "t_pavement_y" );
     t_sidewalk = ter_id( "t_sidewalk" );
